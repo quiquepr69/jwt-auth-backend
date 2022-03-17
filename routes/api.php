@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JWTController;
+use App\Http\Controllers\Movie\MoviesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,10 +16,15 @@ use App\Http\Controllers\JWTController;
 |
 */
 
-Route::group(['middleware' => 'api'], function($router) {
-    Route::post('/register', [JWTController::class, 'register']);
-    Route::post('/login', [JWTController::class, 'login']);
-    Route::post('/logout', [JWTController::class, 'logout']);
-    Route::post('/refresh', [JWTController::class, 'refresh']);
-    Route::get('/profile', [JWTController::class, 'profile']);
+Route::group(['middleware' => 'api'], function ($router) {
+  Route::post('/register', [JWTController::class, 'register']);
+  Route::post('/login', [JWTController::class, 'login']);
+  Route::post('/logout', [JWTController::class, 'logout']);
+  Route::post('/refresh', [JWTController::class, 'refresh']);
+  Route::get('/profile', [JWTController::class, 'profile']);
 });
+
+Route::get('/movie/popular/', [MoviesController::class, 'index']);
+Route::get('/movie/trending/', [MoviesController::class, 'trendingMovies']);
+Route::get('/movie/search/', [MoviesController::class, 'search']);
+Route::get('/movie/genre/', [MoviesController::class, 'genre']);
