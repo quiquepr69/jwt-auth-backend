@@ -24,7 +24,9 @@ Route::group(['middleware' => 'api'], function ($router) {
   Route::get('/profile', [JWTController::class, 'profile']);
 });
 
-Route::get('/movie/popular/', [MoviesController::class, 'index']);
-Route::get('/movie/trending/', [MoviesController::class, 'trendingMovies']);
-Route::get('/movie/search/', [MoviesController::class, 'search']);
-Route::get('/movie/genre/', [MoviesController::class, 'genre']);
+Route::group(['middleware' => 'api'], function ($router) {
+  Route::get('/movie/popular/', [MoviesController::class, 'index']);
+  Route::get('/movie/trending/', [MoviesController::class, 'trendingMovies']);
+  Route::get('/movie/search/', [MoviesController::class, 'search']);
+  Route::get('/movie/genre/', [MoviesController::class, 'genre']);
+});
