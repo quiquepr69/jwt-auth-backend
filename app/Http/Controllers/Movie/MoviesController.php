@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\TheMovieDBGateway;
+use GuzzleHttp\Psr7\Query;
 
 class MoviesController extends Controller
 {
@@ -17,10 +18,19 @@ class MoviesController extends Controller
    */
   public function index(Request $request)
   {
-    $pageNumber = $request['page'];
+
+    $parameters = $this->validate($request, [
+      'page' => 'integer|required'
+    ]);
+
+    $query = [
+      'page' => $parameters['page'],
+    ];
+
+    $pageNumber = Query::build(array_filter($query), PHP_QUERY_RFC1738);
 
     $popularMovies = app(TheMovieDBGateway::class)
-      ->get('/movie/popular', '?page=' . $pageNumber);
+      ->get('/movie/popular' . '?' . $pageNumber);
 
     return $popularMovies;
   }
@@ -32,10 +42,19 @@ class MoviesController extends Controller
    */
   public function trendingMovies(Request $request)
   {
-    $pageNumber = $request['page'];
+    
+    $parameters = $this->validate($request, [
+      'page' => 'integer|required'
+    ]);
+    
+    $query = [
+      'page' => $parameters['page'],
+    ];
+
+    $pageNumber = Query::build(array_filter($query), PHP_QUERY_RFC1738);
 
     $trendingMovies = app(TheMovieDBGateway::class)
-      ->get('/trending/movie/week', '?page=' . $pageNumber);
+      ->get('/trending/movie/week' . '?' . $pageNumber);
 
     return $trendingMovies;
   }
@@ -47,10 +66,11 @@ class MoviesController extends Controller
    */
   public function search(Request $request)
   {
+    
     $searchRequest = $request['query'];
 
     $searchMovies = app(TheMovieDBGateway::class)
-      ->get('/search/movie', '?language=en-US&include_adult=false&query=' . $searchRequest);
+      ->get('/search/movie' . '?language=en-US&include_adult=false&query=' . $searchRequest);
 
     return $searchMovies;
   }
